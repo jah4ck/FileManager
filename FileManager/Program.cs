@@ -18,34 +18,53 @@ namespace FileManager
             Trace trace = new Trace();
             Object Guid = Registry.GetValue(@"HKEY_USERS\.DEFAULT\Software\CtrlPc\Version", "GUID", null);
             trace.WriteLog("Lancement de FileManager",2);
+
             string path = @"C:\ProgramData\CtrlPc\";
             string pathLog = @"C:\ProgramData\CtrlPc\LOG\";
             string linkDownload = ConfigurationManager.AppSettings["linkDownload"];
 
             string[] pathDef = { path + @"SCRIPT\", path + @"FLAG\", path + @"PLANNING\", path + @"INSTALLATION\" };
+            trace.WriteLog("reset presence fichier", 2);
+            try
+            {
+                ws.SetResetPresence(Guid.ToString());
+                trace.WriteLog("reset presence fichier OK", 2);
+            }
+            catch (Exception err)
+            {
+                trace.WriteLog("reset presence KO", 1);
+                trace.WriteLog(err.Message, 1);
+            }
 
             foreach (string pathRep in pathDef)
             {
                 string[] file = Directory.GetFiles(pathRep);
                 foreach (string nameFile in file)
                 {
-                    if (ws.GetPresenceFile(Guid.ToString(),nameFile).Contains("KO"))
+                    try
                     {
-                        trace.WriteLog("Suppression du fichier "+nameFile,2);
-                        try
+                        if (ws.GetPresenceFile(Guid.ToString(),nameFile).Contains("KO"))
                         {
-                            File.Delete(nameFile);
+                            trace.WriteLog("Suppression du fichier "+nameFile,2);
+                            try
+                            {
+                                File.Delete(nameFile);
+                            }
+                            catch (Exception err)
+                            {
+                                trace.WriteLog(err.Message,1);
+                            }
                         }
-                        catch (Exception err)
+                        else if (ws.GetPresenceFile(Guid.ToString(),nameFile).Contains("MAJ"))
                         {
-                            trace.WriteLog(err.Message,1);
+                            trace.WriteLog("La présence du fichier "+nameFile+ " a été ajoutée",2);
                         }
                     }
-                    else if (ws.GetPresenceFile(Guid.ToString(),nameFile).Contains("MAJ"))
+                    catch (Exception err)
                     {
-                        trace.WriteLog("La présence du fichier "+nameFile+ " a été ajoutée",2);
+                        trace.WriteLog("Erreur : "+err.Message, 1);
                     }
-                    
+
                 }
             }
 
@@ -96,8 +115,16 @@ namespace FileManager
             }
 
             //gestion de l'auto upload
+            string autoUpload="";
+            try
+            {
+                autoUpload = ws.GetAutoUpload(Guid.ToString());
+            }
+            catch (Exception err)
+            {
+                trace.WriteLog("Erreur : "+err.Message, 1);
+            }
 
-            string autoUpload = ws.GetAutoUpload(Guid.ToString());
             if (!autoUpload.Contains("RAS"))
             {
                 if (autoUpload.Length>5)

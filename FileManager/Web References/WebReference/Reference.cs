@@ -63,6 +63,8 @@ namespace FileManager.WebReference {
         
         private System.Threading.SendOrPostCallback GetAutoUploadOperationCompleted;
         
+        private System.Threading.SendOrPostCallback SetResetPresenceOperationCompleted;
+        
         private bool useDefaultCredentialsSetExplicitly;
         
         /// <remarks/>
@@ -151,6 +153,9 @@ namespace FileManager.WebReference {
         
         /// <remarks/>
         public event GetAutoUploadCompletedEventHandler GetAutoUploadCompleted;
+        
+        /// <remarks/>
+        public event SetResetPresenceCompletedEventHandler SetResetPresenceCompleted;
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/HelloWorld", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
@@ -676,6 +681,34 @@ namespace FileManager.WebReference {
         }
         
         /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/SetResetPresence", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public void SetResetPresence(string guid) {
+            this.Invoke("SetResetPresence", new object[] {
+                        guid});
+        }
+        
+        /// <remarks/>
+        public void SetResetPresenceAsync(string guid) {
+            this.SetResetPresenceAsync(guid, null);
+        }
+        
+        /// <remarks/>
+        public void SetResetPresenceAsync(string guid, object userState) {
+            if ((this.SetResetPresenceOperationCompleted == null)) {
+                this.SetResetPresenceOperationCompleted = new System.Threading.SendOrPostCallback(this.OnSetResetPresenceOperationCompleted);
+            }
+            this.InvokeAsync("SetResetPresence", new object[] {
+                        guid}, this.SetResetPresenceOperationCompleted, userState);
+        }
+        
+        private void OnSetResetPresenceOperationCompleted(object arg) {
+            if ((this.SetResetPresenceCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.SetResetPresenceCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
         public new void CancelAsync(object userState) {
             base.CancelAsync(userState);
         }
@@ -1003,6 +1036,10 @@ namespace FileManager.WebReference {
             }
         }
     }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.6.1055.0")]
+    public delegate void SetResetPresenceCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
 }
 
 #pragma warning restore 1591

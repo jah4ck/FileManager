@@ -231,6 +231,16 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="SetResetPresence">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="guid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetResetPresenceResponse">
+        <s:complexType />
+      </s:element>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="HelloWorldSoapIn">
@@ -335,6 +345,12 @@
   <wsdl:message name="GetAutoUploadSoapOut">
     <wsdl:part name="parameters" element="tns:GetAutoUploadResponse" />
   </wsdl:message>
+  <wsdl:message name="SetResetPresenceSoapIn">
+    <wsdl:part name="parameters" element="tns:SetResetPresence" />
+  </wsdl:message>
+  <wsdl:message name="SetResetPresenceSoapOut">
+    <wsdl:part name="parameters" element="tns:SetResetPresenceResponse" />
+  </wsdl:message>
   <wsdl:portType name="WSCtrlPcSoap">
     <wsdl:operation name="HelloWorld">
       <wsdl:input message="tns:HelloWorldSoapIn" />
@@ -403,6 +419,10 @@
     <wsdl:operation name="GetAutoUpload">
       <wsdl:input message="tns:GetAutoUploadSoapIn" />
       <wsdl:output message="tns:GetAutoUploadSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetResetPresence">
+      <wsdl:input message="tns:SetResetPresenceSoapIn" />
+      <wsdl:output message="tns:SetResetPresenceSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="WSCtrlPcSoap" type="tns:WSCtrlPcSoap">
@@ -560,6 +580,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="SetResetPresence">
+      <soap:operation soapAction="http://tempuri.org/SetResetPresence" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="WSCtrlPcSoap12" type="tns:WSCtrlPcSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -709,6 +738,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetAutoUpload">
       <soap12:operation soapAction="http://tempuri.org/GetAutoUpload" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetResetPresence">
+      <soap12:operation soapAction="http://tempuri.org/SetResetPresence" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
