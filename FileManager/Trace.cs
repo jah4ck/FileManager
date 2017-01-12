@@ -14,7 +14,7 @@ namespace FileManager
         private int status = 3;//fichier
         private int statusParam = 3;//fichier
         private int type = 3;//tout
-        public void WriteLog(string message, int codeErreur, string NameFile)
+        public void WriteLog(string message, int codeErreur)
         {
             string CodeAppli = ConfigurationManager.AppSettings["CodeAppli"];
             LogWriter write = LogWriter.Instance;
@@ -57,17 +57,17 @@ namespace FileManager
 
                     if (codeErreur == 1 && (type == 3 || type == 1))
                     {
-                        write.WriteToLog(message.ToString(), codeErreur, NameFile);
+                        write.WriteToLog(message.ToString(), codeErreur, "JOURNAL");
                     }
                     if (codeErreur == 2 && (type == 3 || type == 2))
                     {
-                        write.WriteToLog(message.ToString(), codeErreur, NameFile);
+                        write.WriteToLog(message.ToString(), codeErreur, "JOURNAL");
                     }
 
                 }
                 catch (Exception err)
                 {
-                    write.WriteToLog(err.Message, 1, NameFile);
+                    write.WriteToLog(err.Message, 1, "JOUNRAL_ERREUR");
                 }
 
             }

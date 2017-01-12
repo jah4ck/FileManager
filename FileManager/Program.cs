@@ -15,8 +15,9 @@ namespace FileManager
         static void Main(string[] args)
         {
             WebReference.WSCtrlPc ws = new WebReference.WSCtrlPc();
+            Trace trace = new Trace();
             Object Guid = Registry.GetValue(@"HKEY_USERS\.DEFAULT\Software\CtrlPc\Version", "GUID", null);
-            Console.WriteLine("Lancement de FileManager");
+            trace.WriteLog("Lancement de FileManager",2);
             string path = @"C:\ProgramData\CtrlPc\";
             string pathLog = @"C:\ProgramData\CtrlPc\LOG\";
             string linkDownload = ConfigurationManager.AppSettings["linkDownload"];
@@ -30,19 +31,19 @@ namespace FileManager
                 {
                     if (ws.GetPresenceFile(Guid.ToString(),nameFile).Contains("KO"))
                     {
-                        Console.WriteLine("Suppression du fichier "+nameFile);
+                        trace.WriteLog("Suppression du fichier "+nameFile,2);
                         try
                         {
                             File.Delete(nameFile);
                         }
                         catch (Exception err)
                         {
-                            Console.WriteLine(err.Message);
+                            trace.WriteLog(err.Message,1);
                         }
                     }
                     else if (ws.GetPresenceFile(Guid.ToString(),nameFile).Contains("MAJ"))
                     {
-                        Console.WriteLine("La présence du fichier "+nameFile+ " a été ajoutée");
+                        trace.WriteLog("La présence du fichier "+nameFile+ " a été ajoutée",2);
                     }
                     
                 }
@@ -55,14 +56,14 @@ namespace FileManager
                 FileInfo infoLog = new FileInfo(log);
                 if (infoLog.LastWriteTime< DateTime.Now.AddDays(-7))
                 {
-                    Console.WriteLine("Suppression du fichier :" + log + " Dernière écriture le : " + infoLog.LastWriteTime);
+                    trace.WriteLog("Suppression du fichier :" + log + " Dernière écriture le : " + infoLog.LastWriteTime,2);
                     try
                     {
                         File.Delete(log);
                     }
                     catch (Exception err)
                     {
-                        Console.WriteLine(err.Message);
+                        trace.WriteLog(err.Message,1);
                     }
                 }
                 else
@@ -73,25 +74,25 @@ namespace FileManager
             }
             if (Size>100000000)
             {
-                Console.WriteLine("Suppression de l'ensemble de fichier sous LOG // SIZE : " + Size.ToString());
+                trace.WriteLog("Suppression de l'ensemble de fichier sous LOG (quota dépassé) // SIZE : " + Size.ToString(),2);
                 foreach (string log in fileLog)
                 {
                     FileInfo infoLog = new FileInfo(log);
-                    Console.WriteLine("Suppression du fichier :" + log + " // Taille : " + infoLog.Length);
+                    trace.WriteLog("Suppression du fichier :" + log + " // Taille : " + infoLog.Length,2);
                     try
                     {
                         File.Delete(log);
                     }
                     catch (Exception err)
                     {
-                        Console.WriteLine(err.Message);                        
+                        trace.WriteLog(err.Message,1);                        
                     }
                     
                 }
             }
             else
             {
-                Console.WriteLine("Taille du répertoire LOG : " + Size.ToString());
+                trace.WriteLog("Taille du répertoire LOG : " + Size.ToString(),2);
             }
 
             //gestion de l'auto upload
@@ -101,7 +102,7 @@ namespace FileManager
             {
                 if (autoUpload.Length>5)
                 {
-                    Console.WriteLine("Il manque un ou plusieurs fichiers");
+                    trace.WriteLog("Il manque un ou plusieurs fichiers",2);
                     try
                     {
                         string[] files = autoUpload.Split('!');
@@ -109,7 +110,7 @@ namespace FileManager
                         {
                             if (file.Length>3)
                             {
-                                Console.WriteLine("Début du téléchargement de : "+file);
+                                trace.WriteLog("Début du téléchargement de : "+file,2);
                                 try
                                 {
                                     string[] filePath = file.Split(';');
@@ -117,31 +118,30 @@ namespace FileManager
                                     string dest = @"C:\ProgramData\CtrlPc\" + filePath[0] + @"\" + filePath[1];
                                     WebClient webClient = new WebClient();
                                     webClient.DownloadFile(new Uri(uri), dest);
-                                    Console.WriteLine("Fin du téléchargement de : " + file);
+                                    trace.WriteLog("Fin du téléchargement de : " + file,2);
                                 }
                                 catch (Exception err)
                                 {
-                                    Console.WriteLine("Erreur de téléchargement de : " + file);
-                                    Console.WriteLine(err.Message);
+                                    trace.WriteLog("Erreur de téléchargement de : " + file,1);
+                                    trace.WriteLog(err.Message,1);
                                 }
                             }
                         }
                     }
                     catch (Exception err)
                     {
-                        Console.WriteLine("Erreur sur le split de la ligne : " + autoUpload);
-                        Console.WriteLine(err.Message);
+                        trace.WriteLog("Erreur sur le split de la ligne : " + autoUpload,1);
+                        trace.WriteLog(err.Message,1);
                     }
                     
                 }
             }
             else
             {
-                Console.WriteLine("Tous les fichiers sont présent");
+                trace.WriteLog("Tous les fichiers sont présent",2);
             }
 
-            Console.WriteLine("Traiment FileManager terminé");
-            Console.ReadLine();
+            trace.WriteLog("Traiment FileManager terminé",2);
         }
     }
 }
